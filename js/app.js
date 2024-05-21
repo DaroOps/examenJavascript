@@ -35,6 +35,12 @@ document.addEventListener("user:data-message", (e) => {
     manageCar(e.detail.class_name, e.detail.id)
 })
 
+document.addEventListener("user:data-id", (e) => {
+    console.log('eventoRecibido!', e.detail);
+    removeFromCart(e.detail.id)
+})
+
+
 buttonAll.addEventListener("click", function (event) {
     cleanView()
     activateTabIndex(event);
@@ -137,96 +143,138 @@ function createCartItem(itemDataArray) {
     const carContainer = document.getElementById('car-grid');
 
     itemDataArray.forEach(itemData => {
-        const carItem = document.createElement('div');
-        carItem.classList.add('car-item');
-        carItem.id = itemData.id;
+        const carItem = document.createElement('car-item');
 
-        let productName = '';
-        let productImage = '';
-        let productPrice = '';
-
+        console.log('data iterada', itemData);
+        console.log('COATS IN ARRAY', coats);
+        
+        // {
+        //     "id": "pantalon5",
+        //     "pantalonId": "pantalon5",
+        //     "cantidad": 1
+        // }
+        carItem.id = itemData.id
+        console.log('item DATA A COMPARAR', carItem);
+        
         if (itemData.abrigoId !== undefined) {
-            const coat = coats.find(coat => coat.id == itemData.abrigoId);
+            const coat = coats.find(coat => "chaqueta"+coat.id == itemData.abrigoId);
             if (coat) {
-                productName = coat.nombre;
-                productImage = coat.imagen;
-                productPrice = coat.precio;
+                console.log('coat!', coat);
+                
+                carItem.setAttribute("name",coat.nombre);
+                carItem.setAttribute("img",coat.imagen);
+                carItem.setAttribute("price",coat.precio);
+                carItem.setAttribute("quantity", itemData.cantidad);
             }
         } else if (itemData.camisetaId !== undefined) {
-            const tShirt = tShirts.find(tShirt => tShirt.id == itemData.camisetaId);
+            const tShirt = tShirts.find(tShirt => "camiseta"+tShirt.id == itemData.camisetaId);
             if (tShirt) {
-                productName = tShirt.nombre;
-                productImage = tShirt.imagen;
-                productPrice = tShirt.precio;
+                carItem.setAttribute("name",tShirt.nombre);
+                carItem.setAttribute("img",tShirt.imagen);
+                carItem.setAttribute("price",tShirt.precio);
+                carItem.setAttribute("quantity", itemData.cantidad);
+
             }
         } else if (itemData.pantalonId !== undefined) {
-            const pant = pants.find(pant => pant.id == itemData.pantalonId);
+            const pant = pants.find(pant => "pantalon"+pant.id == itemData.pantalonId);
             if (pant) {
-                productName = pant.nombre;
-                productImage = pant.imagen;
-                productPrice = pant.precio;
+                carItem.setAttribute("name",pant.nombre);
+                carItem.setAttribute("img",pant.imagen);
+                carItem.setAttribute("price",pant.precio);
+                carItem.setAttribute("quantity", itemData.cantidad);
+
             }
         }
+        // const carItem = document.createElement('div');
+        // carItem.classList.add('car-item');
+        // carItem.id = itemData.id;
 
-        const carImg = document.createElement('div');
-        carImg.classList.add('car-img');
-        const imageElement = document.createElement('img');
-        imageElement.src = productImage;
-        carImg.appendChild(imageElement);
+        // let productName = '';
+        // let productImage = '';
+        // let productPrice = '';
 
-        const carItemName = document.createElement('div');
-        carItemName.classList.add('car-item-name');
-        const nameTitle = document.createElement('h6');
-        nameTitle.textContent = 'Nombre';
-        const nameParagraph = document.createElement('p');
-        nameParagraph.id = 'car-item-name';
-        nameParagraph.textContent = productName;
-        carItemName.appendChild(nameTitle);
-        carItemName.appendChild(nameParagraph);
+        // if (itemData.abrigoId !== undefined) {
+        //     const coat = coats.find(coat => coat.id == itemData.abrigoId);
+        //     if (coat) {
+        //         productName = coat.nombre;
+        //         productImage = coat.imagen;
+        //         productPrice = coat.precio;
+        //     }
+        // } else if (itemData.camisetaId !== undefined) {
+        //     const tShirt = tShirts.find(tShirt => tShirt.id == itemData.camisetaId);
+        //     if (tShirt) {
+        //         productName = tShirt.nombre;
+        //         productImage = tShirt.imagen;
+        //         productPrice = tShirt.precio;
+        //     }
+        // } else if (itemData.pantalonId !== undefined) {
+        //     const pant = pants.find(pant => pant.id == itemData.pantalonId);
+        //     if (pant) {
+        //         productName = pant.nombre;
+        //         productImage = pant.imagen;
+        //         productPrice = pant.precio;
+        //     }
+        // }
 
-        const carItemQuantity = document.createElement('div');
-        carItemQuantity.classList.add('car-item-quantity');
-        const quantityTitle = document.createElement('h6');
-        quantityTitle.textContent = 'Cantidad';
-        const quantityParagraph = document.createElement('p');
-        quantityParagraph.id = 'car-item-quantity';
-        quantityParagraph.textContent = itemData.cantidad;
-        carItemQuantity.appendChild(quantityTitle);
-        carItemQuantity.appendChild(quantityParagraph);
+        // const carImg = document.createElement('div');
+        // carImg.classList.add('car-img');
+        // const imageElement = document.createElement('img');
+        // imageElement.src = productImage;
+        // carImg.appendChild(imageElement);
 
-        const carItemPrice = document.createElement('div');
-        carItemPrice.classList.add('car-item-price');
-        const priceTitle = document.createElement('h6');
-        priceTitle.textContent = 'Precio';
-        const priceParagraph = document.createElement('p');
-        priceParagraph.id = 'car-item-price';
-        priceParagraph.textContent = "$ " + productPrice;
-        carItemPrice.appendChild(priceTitle);
-        carItemPrice.appendChild(priceParagraph);
+        // const carItemName = document.createElement('div');
+        // carItemName.classList.add('car-item-name');
+        // const nameTitle = document.createElement('h6');
+        // nameTitle.textContent = 'Nombre';
+        // const nameParagraph = document.createElement('p');
+        // nameParagraph.id = 'car-item-name';
+        // nameParagraph.textContent = productName;
+        // carItemName.appendChild(nameTitle);
+        // carItemName.appendChild(nameParagraph);
 
-        const carItemSubtotal = document.createElement('div');
-        carItemSubtotal.classList.add('car-item-subtotal');
-        const subtotalTitle = document.createElement('h6');
-        subtotalTitle.textContent = 'Subtotal';
-        const subtotalParagraph = document.createElement('p');
-        subtotalParagraph.id = 'car-item-subtotal';
-        subtotalParagraph.textContent = "$ " + itemData.cantidad * productPrice;
-        carItemSubtotal.appendChild(subtotalTitle);
-        carItemSubtotal.appendChild(subtotalParagraph);
+        // const carItemQuantity = document.createElement('div');
+        // carItemQuantity.classList.add('car-item-quantity');
+        // const quantityTitle = document.createElement('h6');
+        // quantityTitle.textContent = 'Cantidad';
+        // const quantityParagraph = document.createElement('p');
+        // quantityParagraph.id = 'car-item-quantity';
+        // quantityParagraph.textContent = itemData.cantidad;
+        // carItemQuantity.appendChild(quantityTitle);
+        // carItemQuantity.appendChild(quantityParagraph);
 
-        const trashIcon = document.createElement('i');
-        trashIcon.classList.add('bx', 'bxs-trash');
-        trashIcon.id = "trash-ico"
-        trashIcon.addEventListener('click', () => {
-            removeFromCart(itemData.id);
-        });
+        // const carItemPrice = document.createElement('div');
+        // carItemPrice.classList.add('car-item-price');
+        // const priceTitle = document.createElement('h6');
+        // priceTitle.textContent = 'Precio';
+        // const priceParagraph = document.createElement('p');
+        // priceParagraph.id = 'car-item-price';
+        // priceParagraph.textContent = "$ " + productPrice;
+        // carItemPrice.appendChild(priceTitle);
+        // carItemPrice.appendChild(priceParagraph);
 
-        carItem.appendChild(carImg);
-        carItem.appendChild(carItemName);
-        carItem.appendChild(carItemQuantity);
-        carItem.appendChild(carItemPrice);
-        carItem.appendChild(carItemSubtotal);
-        carItem.appendChild(trashIcon);
+        // const carItemSubtotal = document.createElement('div');
+        // carItemSubtotal.classList.add('car-item-subtotal');
+        // const subtotalTitle = document.createElement('h6');
+        // subtotalTitle.textContent = 'Subtotal';
+        // const subtotalParagraph = document.createElement('p');
+        // subtotalParagraph.id = 'car-item-subtotal';
+        // subtotalParagraph.textContent = "$ " + itemData.cantidad * productPrice;
+        // carItemSubtotal.appendChild(subtotalTitle);
+        // carItemSubtotal.appendChild(subtotalParagraph);
+
+        // const trashIcon = document.createElement('i');
+        // trashIcon.classList.add('bx', 'bxs-trash');
+        // trashIcon.id = "trash-ico"
+        // trashIcon.addEventListener('click', () => {
+        //     removeFromCart(itemData.id);
+        // });
+
+        // carItem.appendChild(carImg);
+        // carItem.appendChild(carItemName);
+        // carItem.appendChild(carItemQuantity);
+        // carItem.appendChild(carItemPrice);
+        // carItem.appendChild(carItemSubtotal);
+        // carItem.appendChild(trashIcon);
 
         carContainer.appendChild(carItem);
     });
@@ -238,22 +286,22 @@ function createProduct(data) {
 
     data.forEach(productData => {
         const productItem = document.createElement('product-item');
-       
+
         productItem.setAttribute("name", productData.nombre)
         productItem.setAttribute("img", productData.imagen)
         productItem.setAttribute("price", productData.precio)
 
         if (productData.nombre.includes("Camiseta")) {
             productItem.classList.add("camiseta")
-            productItem.setAttribute("id", "camiseta"+productData.id)
+            productItem.setAttribute("id", "camiseta" + productData.id)
         }
         else if (productData.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("pantalon")) {
             productItem.classList.add("pantalon")
-            productItem.setAttribute("id", "pantalon"+productData.id)
+            productItem.setAttribute("id", "pantalon" + productData.id)
         }
         else if (productData.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("chaqueta")) {
             productItem.classList.add("chaqueta")
-            productItem.setAttribute("id", "chaqueta"+productData.id)
+            productItem.setAttribute("id", "chaqueta" + productData.id)
         }
         // calculateTotal();
         fragment.appendChild(productItem)
@@ -287,7 +335,7 @@ async function fetchData() {
                         data[category].forEach(item => pants.push(item));
                         break;
                     case "carrito":
-                        data[category].forEach(item => car.push(item));
+                        // data[category].forEach(item => car.push(item));
                         break;
                     default:
                         break;
@@ -341,7 +389,7 @@ function cleanView() {
         product.remove();
     });
 
-    const cars = document.querySelectorAll('.car-item');
+    const cars = document.querySelectorAll('car-item');
     cars.forEach(car => {
         car.remove();
     });
@@ -419,9 +467,10 @@ function manageCar(productClass, productId) {
 
         if (existingItem) {
             existingItem.cantidad += quantity;
+            console.log('aumentado', existingItem);
         } else {
             const newItem = {
-                id: Date.now(),
+                id: productId,
             };
 
             switch (productClass) {
@@ -438,6 +487,7 @@ function manageCar(productClass, productId) {
 
             newItem.cantidad = quantity;
             car.push(newItem);
+            console.log('agregado', newItem);
 
         }
 
