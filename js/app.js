@@ -185,96 +185,6 @@ function createCartItem(itemDataArray) {
 
             }
         }
-        // const carItem = document.createElement('div');
-        // carItem.classList.add('car-item');
-        // carItem.id = itemData.id;
-
-        // let productName = '';
-        // let productImage = '';
-        // let productPrice = '';
-
-        // if (itemData.abrigoId !== undefined) {
-        //     const coat = coats.find(coat => coat.id == itemData.abrigoId);
-        //     if (coat) {
-        //         productName = coat.nombre;
-        //         productImage = coat.imagen;
-        //         productPrice = coat.precio;
-        //     }
-        // } else if (itemData.camisetaId !== undefined) {
-        //     const tShirt = tShirts.find(tShirt => tShirt.id == itemData.camisetaId);
-        //     if (tShirt) {
-        //         productName = tShirt.nombre;
-        //         productImage = tShirt.imagen;
-        //         productPrice = tShirt.precio;
-        //     }
-        // } else if (itemData.pantalonId !== undefined) {
-        //     const pant = pants.find(pant => pant.id == itemData.pantalonId);
-        //     if (pant) {
-        //         productName = pant.nombre;
-        //         productImage = pant.imagen;
-        //         productPrice = pant.precio;
-        //     }
-        // }
-
-        // const carImg = document.createElement('div');
-        // carImg.classList.add('car-img');
-        // const imageElement = document.createElement('img');
-        // imageElement.src = productImage;
-        // carImg.appendChild(imageElement);
-
-        // const carItemName = document.createElement('div');
-        // carItemName.classList.add('car-item-name');
-        // const nameTitle = document.createElement('h6');
-        // nameTitle.textContent = 'Nombre';
-        // const nameParagraph = document.createElement('p');
-        // nameParagraph.id = 'car-item-name';
-        // nameParagraph.textContent = productName;
-        // carItemName.appendChild(nameTitle);
-        // carItemName.appendChild(nameParagraph);
-
-        // const carItemQuantity = document.createElement('div');
-        // carItemQuantity.classList.add('car-item-quantity');
-        // const quantityTitle = document.createElement('h6');
-        // quantityTitle.textContent = 'Cantidad';
-        // const quantityParagraph = document.createElement('p');
-        // quantityParagraph.id = 'car-item-quantity';
-        // quantityParagraph.textContent = itemData.cantidad;
-        // carItemQuantity.appendChild(quantityTitle);
-        // carItemQuantity.appendChild(quantityParagraph);
-
-        // const carItemPrice = document.createElement('div');
-        // carItemPrice.classList.add('car-item-price');
-        // const priceTitle = document.createElement('h6');
-        // priceTitle.textContent = 'Precio';
-        // const priceParagraph = document.createElement('p');
-        // priceParagraph.id = 'car-item-price';
-        // priceParagraph.textContent = "$ " + productPrice;
-        // carItemPrice.appendChild(priceTitle);
-        // carItemPrice.appendChild(priceParagraph);
-
-        // const carItemSubtotal = document.createElement('div');
-        // carItemSubtotal.classList.add('car-item-subtotal');
-        // const subtotalTitle = document.createElement('h6');
-        // subtotalTitle.textContent = 'Subtotal';
-        // const subtotalParagraph = document.createElement('p');
-        // subtotalParagraph.id = 'car-item-subtotal';
-        // subtotalParagraph.textContent = "$ " + itemData.cantidad * productPrice;
-        // carItemSubtotal.appendChild(subtotalTitle);
-        // carItemSubtotal.appendChild(subtotalParagraph);
-
-        // const trashIcon = document.createElement('i');
-        // trashIcon.classList.add('bx', 'bxs-trash');
-        // trashIcon.id = "trash-ico"
-        // trashIcon.addEventListener('click', () => {
-        //     removeFromCart(itemData.id);
-        // });
-
-        // carItem.appendChild(carImg);
-        // carItem.appendChild(carItemName);
-        // carItem.appendChild(carItemQuantity);
-        // carItem.appendChild(carItemPrice);
-        // carItem.appendChild(carItemSubtotal);
-        // carItem.appendChild(trashIcon);
 
         carContainer.appendChild(carItem);
     });
@@ -403,13 +313,13 @@ function calculateTotal() {
         let itemPrice;
 
         if (item.abrigoId !== undefined) {
-            const coat = coats.find(coat => coat.id == item.abrigoId);
+            const coat = coats.find(coat => "chaqueta"+coat.id == item.abrigoId);
             itemPrice = coat ? coat.precio : 0;
         } else if (item.camisetaId !== undefined) {
-            const tShirt = tShirts.find(tShirt => tShirt.id == item.camisetaId);
+            const tShirt = tShirts.find(tShirt => "camiseta"+tShirt.id == item.camisetaId);
             itemPrice = tShirt ? tShirt.precio : 0;
         } else if (item.pantalonId !== undefined) {
-            const pant = pants.find(pant => pant.id == item.pantalonId);
+            const pant = pants.find(pant => "pantalon"+pant.id == item.pantalonId);
             itemPrice = pant ? pant.precio : 0;
         }
 
