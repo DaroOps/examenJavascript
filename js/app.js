@@ -1,8 +1,19 @@
+import { carItem } from "./components/carItem.js";
+import { productItem } from "./components/productItem.js";
+
+customElements.define("product-item", productItem);
+customElements.define("car-item", carItem)
+
+
 let allProducts = []
 let coats = []
 let tShirts = []
 let pants = []
 let car = []
+
+
+
+
 
 const view = document.getElementById("view")
 
@@ -19,6 +30,10 @@ const carSize = document.getElementById("cart-count");
 
 let fetcAA = "https://file.notion.so/f/f/eaa1771c-fc19-40d4-8527-37ca1caab8fa/8f181ea0-47f7-49a5-9b85-48db35d8ec38/Documentos_DB.json?id=a21b973c-4a2b-4e71-b3f3-1b6e38a01f05&table=block&spaceId=eaa1771c-fc19-40d4-8527-37ca1caab8fa&expirationTimestamp=1710597600000&signature=H4E5-BCFxw_gtPqActAr3i5A1JJxtOMqYGc3WOIyj1I&downloadName=Documentos_DB.json"
 
+document.addEventListener("user:data-message", (e) => {
+    console.log('eventoRecibido!', e.detail);
+    manageCar(e.detail.class_name, e.detail.id)
+})
 
 buttonAll.addEventListener("click", function (event) {
     cleanView()
@@ -101,7 +116,7 @@ buttonCar.addEventListener("click", function (event) {
         hideElement("car-manager")
     }
     view.textContent = "Carrito"
-    
+
 });
 
 buttonEmpty.addEventListener("click", function () {
@@ -222,100 +237,31 @@ function createProduct(data) {
     const fragment = document.createDocumentFragment();
 
     data.forEach(productData => {
-        const product = document.createElement('div');
-        product.classList.add('product-item');
-        product.id = productData.id
-
-        const productImg = document.createElement('div');
-        productImg.classList.add('product-img');
-
-        const productImgSrc = document.createElement('img');
-        productImgSrc.src = productData.imagen;
-
-        const productInfo = document.createElement('section');
-        productInfo.classList.add('product-info');
-
-        const title = document.createElement('h3');
-        title.textContent = productData.nombre;
+        const productItem = document.createElement('product-item');
+       
+        productItem.setAttribute("name", productData.nombre)
+        productItem.setAttribute("img", productData.imagen)
+        productItem.setAttribute("price", productData.precio)
 
         if (productData.nombre.includes("Camiseta")) {
-            product.classList.add("camiseta")
+            productItem.classList.add("camiseta")
+            productItem.setAttribute("id", "camiseta"+productData.id)
         }
         else if (productData.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("pantalon")) {
-            product.classList.add("pantalon")
+            productItem.classList.add("pantalon")
+            productItem.setAttribute("id", "pantalon"+productData.id)
         }
         else if (productData.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes("chaqueta")) {
-            product.classList.add("chaqueta")
+            productItem.classList.add("chaqueta")
+            productItem.setAttribute("id", "chaqueta"+productData.id)
         }
-
-        const infoFoo = document.createElement('div');
-        infoFoo.classList.add('info-foo');
-
-        const price = document.createElement('p');
-        price.textContent = `$ ${productData.precio}`;
-
-        const button = document.createElement('button');
-        button.classList.add('add-button')
-        button.textContent = "Agregar";
-
-        button.addEventListener("click", function (event) {
-            const productItem = event.target.parentNode.parentNode.parentNode;
-            const productClass = Array.from(productItem.classList).find(className => className === 'camiseta' || className === 'pantalon' || className === 'chaqueta');
-            calculateTotal();
-            if (productClass) {
-                const productId = productItem.id;
-                const quantity = 1; 
-                
-                const existingItem = car.find(item => {
-                    if (productClass === 'camiseta') {
-                        return item.camisetaId === productId;
-                    } else if (productClass === 'pantalon') {
-                        return item.pantalonId === productId;
-                    } else if (productClass === 'chaqueta') {
-                        return item.abrigoId === productId;
-                    }
-                    return false;
-                });
-
-                if (existingItem) {
-                    existingItem.cantidad += quantity;
-                } else {
-                    const newItem = {
-                        id: Date.now(),
-                    };
-
-                    switch (productClass) {
-                        case 'camiseta':
-                            newItem.camisetaId = productId;
-                            break;
-                        case 'pantalon':
-                            newItem.pantalonId = productId;
-                            break;
-                        case 'chaqueta':
-                            newItem.abrigoId = productId;
-                            break;
-                    }
-
-                    newItem.cantidad = quantity;
-                    car.push(newItem);
-                    
-                }
-
-                carSize.textContent = car.length;
-            }
-            
-            console.log(car);
-            
-        });
-        productImg.appendChild(productImgSrc);
-        productInfo.append(title, infoFoo);
-        infoFoo.append(price, button);
-        product.append(productImg, productInfo);
-        fragment.appendChild(product);
-        calculateTotal();
+        // calculateTotal();
+        fragment.appendChild(productItem)
     });
 
-    productsContainer.appendChild(fragment);
+
+    // productsContainer.appendChild(fragment);
+    productsContainer.appendChild(fragment)
 }
 
 async function fetchData() {
@@ -390,7 +336,7 @@ function showElement(elementId) {
 }
 
 function cleanView() {
-    const products = document.querySelectorAll('.product-item');
+    const products = document.querySelectorAll('product-item');
     products.forEach(product => {
         product.remove();
     });
@@ -404,10 +350,10 @@ function cleanView() {
 
 function calculateTotal() {
     let total = 0;
-   
+
     car.forEach(item => {
         let itemPrice;
-       
+
         if (item.abrigoId !== undefined) {
             const coat = coats.find(coat => coat.id == item.abrigoId);
             itemPrice = coat ? coat.precio : 0;
@@ -441,7 +387,7 @@ function removeFromCart(itemId) {
         createCartItem(car);
     }
 
-    if(car.length < 1){
+    if (car.length < 1) {
         hideElement("car-manager")
         const empty = document.createElement("h3");
         empty.setAttribute("id", "nothing");
@@ -453,3 +399,51 @@ function removeFromCart(itemId) {
 }
 
 window.onload = fetchData();
+
+
+function manageCar(productClass, productId) {
+    calculateTotal();
+    if (productClass) {
+        const quantity = 1;
+
+        const existingItem = car.find(item => {
+            if (productClass === 'camiseta') {
+                return item.camisetaId === productId;
+            } else if (productClass === 'pantalon') {
+                return item.pantalonId === productId;
+            } else if (productClass === 'chaqueta') {
+                return item.abrigoId === productId;
+            }
+            return false;
+        });
+
+        if (existingItem) {
+            existingItem.cantidad += quantity;
+        } else {
+            const newItem = {
+                id: Date.now(),
+            };
+
+            switch (productClass) {
+                case 'camiseta':
+                    newItem.camisetaId = productId;
+                    break;
+                case 'pantalon':
+                    newItem.pantalonId = productId;
+                    break;
+                case 'chaqueta':
+                    newItem.abrigoId = productId;
+                    break;
+            }
+
+            newItem.cantidad = quantity;
+            car.push(newItem);
+
+        }
+
+        carSize.textContent = car.length;
+    }
+
+    console.log(car);
+
+}
